@@ -1,9 +1,9 @@
 import React from 'react'
 
-function ListItem(props){
+function ListItems(props){
     const todoList = props.todoList
 
-    const listItems = todoList.map(item => {
+    const listItem = todoList.map(item => {
         return <div className = "list" key ={item.key} > 
             <p> 
                 <input type="checkbox" onClick = {() => props.checkDone(item)}/>
@@ -22,9 +22,9 @@ function ListItem(props){
 
     return(
         <div>
-            {listItems}  
+            {listItem}  
         </div>
     )
 }
 
-export default ListItem
+export default ListItems

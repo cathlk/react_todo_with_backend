@@ -14,6 +14,8 @@ class ListBody extends React.Component {
                 isChecked: false
             }
         }
+        
+        this.getTodoList = this.getTodoList.bind(this)        
         this.handleInput = this.handleInput.bind(this)
         this.addItem = this.addItem.bind(this)
         this.setUpdate = this.setUpdate.bind(this)
@@ -21,6 +23,16 @@ class ListBody extends React.Component {
         this.deleteItem = this.deleteItem.bind(this)
     }   
     
+    componentDidMount() {
+        this.getTodoList() 
+    }
+
+    getTodoList() {
+        fetch('http://localhost:3001/todoList')
+          .then(res => res.json())
+          .then(todoList => this.setState({ todoList: todoList })) 
+    }
+
     // uppdatera inputfält skickar med information till varje skapat item  
     handleInput(event){
         this.setState({
@@ -56,8 +68,8 @@ class ListBody extends React.Component {
         updateList.map(item => {
             if(item.key === thekey) {
                 item.text = thetext
+                console.log(thekey);
             } 
-            console.log(thekey);
         })
         this.setState({todoList: updateList}) 
     }
@@ -78,7 +90,17 @@ class ListBody extends React.Component {
             item.key !== thekey) 
             this.setState({ todoList: filteredList })
         }
-      
+
+    // deleteTodoItem(id) {
+    //     fetch(`http://localhost:3001/todoList/${id}`, {
+    //       method: 'DELETE',
+    //       headers: {
+    //         'Content-Type': 'application/json' //för den ska fatta det är json server 
+    //       }
+    //     })
+    //       .then(() => this.getTodoList()) 
+    // }
+
     render () {
     return(
         <div className="App">

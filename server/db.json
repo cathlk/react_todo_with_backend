@@ -1,9 +1,9 @@
 {
   "todoList": [
     {
-      "id": 2,
-      "title": "This was easy!",
-      "content": "What's next?"
+      "isChecked": false,
+      "id": 12121,
+      "value": "text from db json, pretty pls work"
     }
   ]
 }
