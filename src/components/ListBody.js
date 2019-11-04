@@ -1,5 +1,5 @@
 import React from 'react'
-import ListItems from './ListItems'
+import ListItem from './ListItem'
 
 
 class ListBody extends React.Component { 
@@ -10,7 +10,7 @@ class ListBody extends React.Component {
             todoList: [], 
             currentItem: {
                 text: "", 
-                key: "",
+                id: "",
                 isChecked: false
             }
         }
@@ -38,7 +38,7 @@ class ListBody extends React.Component {
         this.setState({
             currentItem: {
             text: event.target.value, 
-            key: Date.now(), 
+            id: Date.now(), 
             isChecked: false
             }
         })
@@ -56,19 +56,19 @@ class ListBody extends React.Component {
                 todoList: newTodoList, 
                 currentItem: {
                     text: "", 
-                    key: "",
+                    id: "",
                     isChecked: false
                 }  
             })
         }
     }
 
-    setUpdate(thetext, thekey){
+    setUpdate(thetext, theid){
         const updateList = this.state.todoList
         updateList.map(item => {
-            if(item.key === thekey) {
+            if(item.id === theid) {
                 item.text = thetext
-                console.log(thekey);
+                console.log(theid);
             } 
         })
         this.setState({todoList: updateList}) 
@@ -76,7 +76,7 @@ class ListBody extends React.Component {
 
     checkDone(event){
         const checkList = this.state.todoList.map(item => {
-            if(item.key === event.key){
+            if(item.id === event.id){
                 item.isChecked = !item.isChecked 
         }
         return item
@@ -85,9 +85,9 @@ class ListBody extends React.Component {
     }
       
     // radera ett item 
-    deleteItem(thekey){ 
+    deleteItem(theid){ 
         const filteredList = this.state.todoList.filter(item =>
-            item.key !== thekey) 
+            item.id !== theid) 
             this.setState({ todoList: filteredList })
         }
 
@@ -106,7 +106,6 @@ class ListBody extends React.Component {
         <div className="App">
             <header> 
                 <form onSubmit={this.addItem} >    
-                    {/* <input type="checkbox"/>  */}
                     <input 
                         type="text"
                         placeholder="What u need to do?"
@@ -114,12 +113,18 @@ class ListBody extends React.Component {
                         onChange={this.handleInput}
                     />
                     <button>Add item </button>
-                    <ListItems 
-                        todoList={this.state.todoList}
-                        setUpdate={this.setUpdate} 
-                        checkDone={this.checkDone}
-                        deleteItem={this.deleteItem} 
-                    />
+
+                    {this.state.todoList.map(item => 
+                        <ListItem
+                            key={item.id}
+                            value={item.text}
+                            isChecked={false}
+                            
+                            setUpdate={()=> this.setUpdate(item.target.value, item.id)} 
+                            checkDone={() => this.checkDone(item)}
+                            deleteItem={() => this.deleteItem(item.id)} 
+                        />)
+                    }
                     </form>
             </header>
         </div>
