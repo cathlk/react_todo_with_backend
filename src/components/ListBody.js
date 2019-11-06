@@ -1,7 +1,6 @@
 import React from 'react'
 import ListItems from './ListItems'
 
-
 class ListBody extends React.Component { 
     constructor(props){
         super(props) 
@@ -10,7 +9,7 @@ class ListBody extends React.Component {
             todoList: [], 
             currentItem: {
                 text: "", 
-                key: "",
+                id: "",
                 isChecked: false
             }
         }
@@ -21,12 +20,22 @@ class ListBody extends React.Component {
         this.deleteItem = this.deleteItem.bind(this)
     }   
     
+    componentDidMount() {
+        this.getTodoList() 
+    }
+
+    getTodoList() {
+        fetch('http://localhost:3001/todoList')
+          .then(res => res.json())
+          .then(todoList => this.setState({ todoList: todoList })) 
+    }
+
     // uppdatera inputfält skickar med information till varje skapat item  
     handleInput(event){
         this.setState({
             currentItem: {
             text: event.target.value, 
-            key: Date.now(), 
+            id: Date.now(), 
             isChecked: false
             }
         })
@@ -36,48 +45,66 @@ class ListBody extends React.Component {
     addItem(event){
         //så att sidan inte laddas om 
         event.preventDefault() 
-        const newItem = this.state.currentItem
-
-        if(newItem.text !== ""){
-            const newTodoList = [...this.state.todoList, newItem]
-            this.setState({
-                todoList: newTodoList, 
-                currentItem: {
-                    text: "", 
-                    key: "",
-                    isChecked: false
-                }  
-            })
-        }
+        fetch(`http://localhost:3001/todoList`, {
+          method: 'POST',
+          body: JSON.stringify(this.state.currentItem),
+          headers: {
+            'Content-Type': 'application/json' //för den ska fatta det är json server 
+          }
+        })
+        .then(() => this.getTodoList());
     }
 
-    setUpdate(thetext, thekey){
+    setUpdate(thetext, theid){
         const updateList = this.state.todoList
         updateList.map(item => {
-            if(item.key === thekey) {
+            if(item.id === theid) {
                 item.text = thetext
             } 
-            console.log(thekey);
+            console.log(theid);
         })
         this.setState({todoList: updateList}) 
     }
 
+    // checkDone(event){
+    //     const checkList = this.state.todoList.map(item => {
+    //         if(item.id === event.id){
+    //             item.isChecked = !item.isChecked 
+    //     }
+    //     return item
+    //     })
+    //     this.setState({todoList: checkList})
+    // }
+
     checkDone(event){
-        const checkList = this.state.todoList.map(item => {
-            if(item.key === event.key){
-                item.isChecked = !item.isChecked 
-        }
-        return item
+        fetch(`http://localhost:3001/todoList/${id}`, {
+          method: 'PATCH', 
+          headers: {
+            'Content-Type': 'application/json' //för den ska fatta det är json server 
+          }, 
+          body: JSON.stringify({isChecked})
         })
-        this.setState({todoList: checkList})
+          .then(() => this.getTodoList());
+
+        // const checkList = this.state.todoList.map(item => {
+        //     if(item.id === event.id){
+        //         item.isChecked = !item.isChecked 
+        // }
+        // return item
+        // })
+        // this.setState({todoList: checkList})
     }
       
     // radera ett item 
-    deleteItem(thekey){ 
-        const filteredList = this.state.todoList.filter(item =>
-            item.key !== thekey) 
-            this.setState({ todoList: filteredList })
-        }
+    deleteItem(id) {
+        fetch(`http://localhost:3001/todoList/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json' //för den ska fatta det är json server 
+          }
+        })
+          .then(() => this.getTodoList());
+      }
       
     render () {
     return(

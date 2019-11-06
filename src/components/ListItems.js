@@ -4,16 +4,16 @@ function ListItem(props){
     const todoList = props.todoList
 
     const listItems = todoList.map(item => {
-        return <div className = "list" key ={item.key} > 
+        return <div className = "list" key ={item.id} > 
             <p> 
                 <input type="checkbox" onClick = {() => props.checkDone(item)}/>
                 <input type="text" 
-                    id={item.key} 
+                    id={item.id} 
                     value={item.text} 
                     onChange={
-                        (event) => {props.setUpdate(event.target.value, item.key)}}
+                        (event) => {props.setUpdate(event.target.value, item.id)}}
                 />
-                <span onClick={() => props.deleteItem(item.key)}>x </span>
+                <span onClick={() => props.deleteItem(item.id)}>x </span>
 
             </p>
             
