@@ -1,24 +1,19 @@
 {
   "todoList": [
     {
-      "id": 2,
-      "text": "whoop!!",
-      "isChecked": false
+      "text": "1111x",
+      "isChecked": false,
+      "id": 1
     },
     {
-      "id": 4,
-      "text": "PLEASE WORK!!",
-      "isChecked": false
+      "text": "44444",
+      "isChecked": false,
+      "id": 2
     },
     {
-      "id": 6,
-      "text": "yo hello!!!",
-      "isChecked": false
-    },
-    {
-      "text": "wöööööörk",
-      "id": 1572966770077,
-      "isChecked": false
+      "text": "666",
+      "isChecked": false,
+      "id": 3
     }
   ]
 }

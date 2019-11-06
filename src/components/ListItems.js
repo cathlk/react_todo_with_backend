@@ -6,12 +6,16 @@ function ListItem(props){
     const listItems = todoList.map(item => {
         return <div className = "list" key ={item.id} > 
             <p> 
-                <input type="checkbox" onClick = {() => props.checkDone(item)}/>
+                <input 
+                    type="checkbox" 
+                    onClick = {() => props.checkDone(item.id)} 
+                    defaultChecked={ item.isChecked }
+                /> 
                 <input type="text" 
-                    id={item.id} 
-                    value={item.text} 
-                    onChange={
-                        (event) => {props.setUpdate(event.target.value, item.id)}}
+                    id={ item.id } 
+                    value={ item.text } 
+                    onChange= {
+                        (event) => { props.setUpdate(event.target.value, item.id) }}
                 />
                 <span onClick={() => props.deleteItem(item.id)}>x </span>
 

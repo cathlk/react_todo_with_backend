@@ -27,7 +27,7 @@ class ListBody extends React.Component {
     getTodoList() {
         fetch('http://localhost:3001/todoList')
           .then(res => res.json())
-          .then(todoList => this.setState({ todoList: todoList })) 
+          .then(latestList => this.setState({ todoList: latestList })) 
     }
 
     // uppdatera inputfält skickar med information till varje skapat item  
@@ -35,8 +35,7 @@ class ListBody extends React.Component {
         this.setState({
             currentItem: {
             text: event.target.value, 
-            id: Date.now(), 
-            isChecked: false
+            isChecked: false 
             }
         })
     }
@@ -53,6 +52,7 @@ class ListBody extends React.Component {
           }
         })
         .then(() => this.getTodoList());
+        this.setState({currentItem: {text:""} })
     }
 
     setUpdate(thetext, theid){
@@ -61,38 +61,40 @@ class ListBody extends React.Component {
             if(item.id === theid) {
                 item.text = thetext
             } 
-            console.log(theid);
         })
-        this.setState({todoList: updateList}) 
-    }
-
-    // checkDone(event){
-    //     const checkList = this.state.todoList.map(item => {
-    //         if(item.id === event.id){
-    //             item.isChecked = !item.isChecked 
-    //     }
-    //     return item
-    //     })
-    //     this.setState({todoList: checkList})
-    // }
-
-    checkDone(event){
-        fetch(`http://localhost:3001/todoList/${id}`, {
-          method: 'PATCH', 
+        fetch(`http://localhost:3001/todoList/${theid}`, {
+          method: 'PATCH',
           headers: {
-            'Content-Type': 'application/json' //för den ska fatta det är json server 
-          }, 
-          body: JSON.stringify({isChecked})
+            'Content-Type': 'application/json' //för den ska fatta det är json server
+          },
+          body: JSON.stringify({ text: thetext })
         })
-          .then(() => this.getTodoList());
+        .then(() => this.getTodoList());
+        // this.setState({todoList: updateList}) 
+    }
+    
+    checkDone(id) {
+        // console.log(this.state.todoList);
 
-        // const checkList = this.state.todoList.map(item => {
-        //     if(item.id === event.id){
-        //         item.isChecked = !item.isChecked 
-        // }
-        // return item
-        // })
-        // this.setState({todoList: checkList})
+        let tempChecked;
+        // const checkList = 
+        this.state.todoList.map(item => {
+            if(item.id === id){
+                item.isChecked = !item.isChecked 
+                tempChecked = item.isChecked;
+            }
+            return item
+        })
+        // this.setState({todoList: checkList}) //om vi bara vill ändra state och inte köra get efter fetch
+
+        fetch(`http://localhost:3001/todoList/${id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json' //för den ska fatta det är json server
+          },
+          body: JSON.stringify({ isChecked:tempChecked })
+        })
+        .then(() => this.getTodoList());
     }
       
     // radera ett item 
@@ -104,14 +106,13 @@ class ListBody extends React.Component {
           }
         })
           .then(() => this.getTodoList());
-      }
+    }
       
     render () {
     return(
         <div className="App">
             <header> 
                 <form onSubmit={this.addItem} >    
-                    {/* <input type="checkbox"/>  */}
                     <input 
                         type="text"
                         placeholder="What u need to do?"
@@ -119,13 +120,13 @@ class ListBody extends React.Component {
                         onChange={this.handleInput}
                     />
                     <button>Add item </button>
+                </form>
                     <ListItems 
                         todoList={this.state.todoList}
                         setUpdate={this.setUpdate} 
                         checkDone={this.checkDone}
                         deleteItem={this.deleteItem} 
                     />
-                    </form>
             </header>
         </div>
     )
