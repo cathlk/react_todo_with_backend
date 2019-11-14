@@ -83,7 +83,7 @@ class ListBody extends React.Component {
                 item.isChecked = !item.isChecked 
                 tempChecked = item.isChecked;
             }
-            return item
+            // return item
         })
         // this.setState({todoList: checkList}) //om vi bara vill ändra state och inte köra get efter fetch
 
